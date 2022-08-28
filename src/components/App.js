@@ -1,7 +1,16 @@
+import SignUp from "./SignUp";
+import { Container } from 'react-bootstrap'
 
 function App() {
   return (
-    <h1>Payment Reminder App</h1>
+    <Container 
+      className="d-flex align-items-center justify-content-center"
+      style={{ minHeigth: "100vh" }}
+    >
+      <div className="w-100" style={{ maxWidth: "400px" }}>
+        <SignUp />
+      </div>
+    </Container>
   );
 }
 
