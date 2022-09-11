@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react' 
+import React, { useState } from 'react' 
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from "../contexts/AuthContext"
+import CustomButton from './Common/CustomButton';
+import CustomInput from './Common/CustomInput';
 
 
 export default function SignUp() {
@@ -64,23 +66,38 @@ export default function SignUp() {
                 <h2 className='text-center mb-4'>Sign Up</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group id='email'>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type='email' onChange={(e) => handleEmailChange(e)} required />
-                    </Form.Group>
-                    <Form.Group id='password'>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type='password' onChange={(e) => handlePasswordChange(e)} required />
-                    </Form.Group>
-                    <Form.Group id='password-confirm'>
-                        <Form.Label>Password Confirmation</Form.Label>
-                        <Form.Control type='password' onChange={(e) => handleConfirmPasswordChange(e)} required />
-                    </Form.Group>
-                    <Form.Group id='address'>
-                        <Form.Label>Address</Form.Label>
-                        <Form.Control type='text' onChange={(e) => handleAddressChange(e)} required />
-                    </Form.Group>
-                    <Button disabled={loading} className='w-100' type='submit'>Sign Up</Button>
+                  <CustomInput 
+                    id='email'
+                    title='Email'
+                    type='email'
+                    handleChange={(e) => handleEmailChange(e)}
+                    required={true}
+                  />
+                  <CustomInput 
+                    id='password'
+                    title='Password'
+                    type='password'
+                    handleChange={(e) => handlePasswordChange(e)}
+                    required={true}
+                  />
+                  <CustomInput 
+                    id='confirm-password'
+                    title='Password Confirmation'
+                    type='password'
+                    handleChange={(e) => handleConfirmPasswordChange(e)}
+                    required={true}
+                  />
+                  <CustomInput 
+                    id='address'
+                    title='Address'
+                    type='text'
+                    handleChange={(e) => handleAddressChange(e)}
+                  />
+                  <CustomButton 
+                    disabled={loading}
+                    title='Sign Up'
+                  />
+                  {/* <Button disabled={loading} className='w-100' type='submit'>Sign Up</Button> */}
                 </Form>
             </Card.Body>
         </Card>

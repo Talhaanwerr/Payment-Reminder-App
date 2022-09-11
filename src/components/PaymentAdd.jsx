@@ -3,6 +3,8 @@ import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { collection, doc, getDocs, getDoc, addDoc } from "firebase/firestore"
 import { db } from '../firebase'
+import CustomButton from './Common/CustomButton'
+import CustomInput from './Common/CustomInput'
 
 
 
@@ -59,19 +61,31 @@ export default function PaymentAdd() {
                 <h2 className='text-center mb-4'>Add Payment</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group id='title'>
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control type='text' required onChange={(e) => handleTitleChange(e)}/>
-                    </Form.Group>
-                    <Form.Group id='description'>
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control type='text' required onChange={(e) => handleDescriptionChange(e)}/>
-                    </Form.Group>
-                    <Form.Group id='due-date'>
-                        <Form.Label>Due Date</Form.Label>
-                        <Form.Control type='date' onChange={(e) => handleDateChange(e)} />
-                    </Form.Group>
-                    <Button disabled={loading} className='w-100' type='submit'>Save</Button>
+                  <CustomInput 
+                      id='title'
+                      title='Title'
+                      type='text'
+                      handleChange={(e) => handleTitleChange(e)}
+                      required={true}
+                    />
+                    <CustomInput 
+                      id='description'
+                      title='Description'
+                      type='text'
+                      handleChange={(e) => handleDescriptionChange(e)}
+                      required={true}
+                    />
+                    <CustomInput 
+                      id='due-date'
+                      title='Due Date'
+                      type='date'
+                      handleChange={(e) => handleDateChange(e)}
+                      required={true}
+                    />
+                    <CustomButton
+                      disabled={loading}
+                      title='Save'
+                    />
                 </Form>
             </Card.Body>
         </Card>
