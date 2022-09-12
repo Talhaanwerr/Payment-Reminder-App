@@ -7,6 +7,8 @@ import CustomButton from '../Common/CustomButton'
 import CustomInput from '../Common/CustomInput'
 import { useAuth } from '../../contexts/AuthContext'
 import CustomCheckbox from '../Common/CustomCheckbox'
+import { PaymentContext } from '../../contexts/PaymentContext'
+import { useContext } from 'react'
 
 
 
@@ -21,9 +23,10 @@ export default function PaymentAdd() {
     userId:""
   })
 
-  const { title, description, dueDate } = payment
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const { createPayment } = useContext(PaymentContext)
+  const { title, description, dueDate } = payment
 
   useEffect(() => {
     setPayment({...payment, userId: currentUser.uid })
@@ -35,8 +38,10 @@ export default function PaymentAdd() {
     try {
       setError("")
       setLoading(true)
-      const paymentsCollectionRef = collection(db, "payments")
-      const res = await addDoc(paymentsCollectionRef, payment)
+      const res = await createPayment(payment)
+      console.log("neww: ", res)
+      // const paymentsCollectionRef = collection(db, "payments")
+      // const res = await addDoc(paymentsCollectionRef, payment)
       navigate("/payments")
     } catch (error) {
       console.log("res: ", error)
@@ -46,22 +51,13 @@ export default function PaymentAdd() {
     setLoading(false)
   }
 
-  const handleTitleChange = (e) => {
-    setPayment({...payment, title: e.target.value })
-  }
+  const handleTitleChange = (e) => setPayment({...payment, title: e.target.value })
 
-  const handleDescriptionChange = (e) => {
-    setPayment({...payment, description: e.target.value })
-  }
+  const handleDescriptionChange = (e) => setPayment({...payment, description: e.target.value })
 
-  const handleDueDateChange = (e) => {
-    setPayment({...payment, dueDate: e.target.value })
-  }
+  const handleDueDateChange = (e) => setPayment({...payment, dueDate: e.target.value })
 
-  const handlePaymentStatusChange = (e) => {
-
-    setPayment({...payment, paid: true })
-}
+  const handlePaymentStatusChange = (e) => setPayment({...payment, paid: true })
 
 
   return (

@@ -1,24 +1,47 @@
 import SignUp from "./SignUp";
 import { Container } from 'react-bootstrap'
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "../contexts/AuthContext";
 import Private from "./Private";
 import PaymentsList from "./Payments/PaymentsList";
 import PaymentAdd from "./Payments/PaymentAdd";
 import Login from "./Login";
-import { PaymentProvider } from "../contexts/PaymentContext";
+import { getTokenn, onMessageListener } from "../firebase";
+import { useEffect, useState } from "react";
+import { messaging } from '../firebase'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastSuccess } from "../helpers/ToastHelpers";
+
+
 
 function App() {
-  console.log("App")
+  const [isTokenFound, setTokenFound] = useState(false);
+  const [notification, setNotification] = useState({
+    title: '', 
+    body: ''
+  });
+
+  onMessageListener()
+  .then(payload => {
+    setNotification({title: payload.notification.title, body: payload.notification.body})
+    ToastSuccess(payload.notification.body)
+    console.log(payload);
+  })
+  .catch(err => console.log('failed: ', err));
+
+  
+  useEffect(() => {
+    getTokenn(setTokenFound);
+  }, [isTokenFound])
+  
   return (
-    <AuthProvider>
-    <PaymentProvider>
+    
       <Container 
         className="d-flex align-items-center justify-content-center"
         style={{ minHeigth: "100vh" }}
       >
         <div className="w-100" style={{ maxWidth: "400px" }}>
-        <BrowserRouter>
+          <BrowserRouter>
           <Routes basename="/">
             <Route
                 path="/payments"
@@ -36,10 +59,9 @@ function App() {
           </Routes>
         </BrowserRouter>
         </div>
+        <ToastContainer />
           
       </Container>
-    </PaymentProvider>
-    </AuthProvider>
   );
 }
 

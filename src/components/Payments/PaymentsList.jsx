@@ -12,12 +12,11 @@ import PaymentHeaders from "./PaymentHeaders"
 
 export default function PaymentsList() {
   const [ payments, setPayments ] = useState([])
-  const [ paymentHeaders, setPaymentHeaders ] = useState(['id', 'title', 'description', "Status"])  
+  const [ paymentHeaders, setPaymentHeaders ] = useState(['id', 'title', 'description', "status"])  
   const [error, setError] = useState("")
   const { deletePayment } = useContext(PaymentContext)
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
-
   
   const paymentsCollectionRef = collection(db, "payments")
   useEffect(() => {
@@ -27,16 +26,24 @@ export default function PaymentsList() {
       snapshot.docs.forEach((doc) => {
         payments.push({
           id: doc.id,
+          status: (doc.data().paid == true ? "PAID" : "UNPAID"),
           ...doc.data()
         })
       })
+      console.log("payments", payments)
       setPayments(payments)   
     }
     getPayments()
-  })
+  }, [])
 
-  const handleDeletePayment =  (id) => async (e) => {
+  // const handleDeletePayment = async (id) =>  {
+  //   const res = await deletePayment(id)
+  //   console.log("deleted:", res)
+  // }
+
+  async function handleDeletePayment(id) {
     const res = await deletePayment(id)
+    console.log("deleted:", res)
   }
 
   async function handleAddPayment() {
@@ -78,7 +85,7 @@ export default function PaymentsList() {
               })}
               <td key={`col_99`}>
                 <EditIcon />
-                <DeleteIcon deletePayment={handleDeletePayment(payment.id)} />
+                <DeleteIcon onClick={() => handleDeletePayment(payment.id)} />
               </td>
             </tr>
           )

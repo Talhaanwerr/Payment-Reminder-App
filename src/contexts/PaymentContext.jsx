@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "../firebase"
 import { db } from '../firebase'
-import { collection, doc, getDocs, deleteDoc } from "firebase/firestore"
+import { collection, doc, getDocs, deleteDoc, addDoc } from "firebase/firestore"
 
 
 const PaymentContext = React.createContext()
@@ -34,13 +34,20 @@ function PaymentProvider({ children }) {
   // function logout() {
   //   return auth.signOut()
   // }
+  const createPayment = async (payment) => {
+    const paymentsCollectionRef = collection(db, "payments")
+    return await addDoc(paymentsCollectionRef, payment)
+  }
 
   const deletePayment = async (id) => {
     const paymentDoc = doc(db, "payments", id)
+    return await deleteDoc(paymentDoc)
   }
+
 
   
   const value = {
+    createPayment,
     deletePayment
   }
 
