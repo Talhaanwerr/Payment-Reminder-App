@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react' 
-import { Form, Button, Card, Alert } from 'react-bootstrap'
+import React, { useState } from 'react' 
+import { Form, Card, Alert } from 'react-bootstrap'
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useNavigate } from 'react-router-dom'
 import CustomInput from './Common/CustomInput';
@@ -7,14 +7,13 @@ import CustomButton from './Common/CustomButton';
 
 
 export default function Login() {
+  console.log("login")
   const navigate = useNavigate();
   const [ user, setUser ] = useState({
     email:"",
     password:""
   })
   
-  const emailRef = useRef()
-  const passwordRef = useRef()
   const { login } = useAuth()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
