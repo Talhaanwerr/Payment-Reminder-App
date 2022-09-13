@@ -8,10 +8,6 @@ const CustomCheckbox = ({handleChange, ...rest}) => {
         onChange={handleChange}
         {...rest}
     />
-    // <Form.Group id={id}>
-    //     <Form.Label>{title}</Form.Label>
-    //     <Form.Control onChange={handleChange} {...rest} />
-    // </Form.Group>
   );
 }
 

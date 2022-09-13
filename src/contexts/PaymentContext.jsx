@@ -1,39 +1,14 @@
-import React, { useContext, useState, useEffect } from "react"
-import { auth } from "../firebase"
+import React from "react"
 import { db } from '../firebase'
-import { collection, doc, getDocs, deleteDoc, addDoc } from "firebase/firestore"
-
+import { collection, doc, getDocs, addDoc, updateDoc, query, where } from "firebase/firestore"
+import { useAuth } from "./AuthContext"
 
 const PaymentContext = React.createContext()
 
-// export function usePayment() {
-//   return useContext(PaymentContext)
-// }
-
 function PaymentProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState()
-  const [loading, setLoading] = useState(true)
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged(user => {
-  //     setCurrentUser(user)
-  //     setLoading(false)
-  //   })
+  const { currentUser } = useAuth()
 
-  //   return unsubscribe
-  // }, [])
-
-  // function signup(email, password) {
-  //   return auth.createUserWithEmailAndPassword(email, password)
-  // }
-
-  // function login(email, password) {
-  //   return auth.signInWithEmailAndPassword(email, password)
-  // }
-
-  // function logout() {
-  //   return auth.signOut()
-  // }
   const createPayment = async (payment) => {
     const paymentsCollectionRef = collection(db, "payments")
     return await addDoc(paymentsCollectionRef, payment)
@@ -41,13 +16,37 @@ function PaymentProvider({ children }) {
 
   const deletePayment = async (id) => {
     const paymentDoc = doc(db, "payments", id)
-    return await deleteDoc(paymentDoc)
+    updateDoc(paymentDoc, {
+      deleted: true
+    })
+    .then(() => {
+      return true
+    })
+    .catch(error => {
+        return false;
+    })
+  }
+
+  const getPayments = async () => {
+    const paymentsCollectionRef = collection(db, "payments")
+    const payments = []
+    const q = query(paymentsCollectionRef, where("deleted", "==", false), where("userId", "==", currentUser.uid))
+      const snapshot = await getDocs(q)
+      snapshot.docs.forEach((doc) => {
+        payments.push({
+          id: doc.id,
+          status: (doc.data().paid == true ? "PAID" : "UNPAID"),
+          ...doc.data()
+        })
+      })
+      return payments
   }
 
 
   
   const value = {
     createPayment,
+    getPayments,
     deletePayment
   }
 

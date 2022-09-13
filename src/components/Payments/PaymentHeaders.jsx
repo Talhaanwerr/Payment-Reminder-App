@@ -1,6 +1,3 @@
-import { Button } from 'react-bootstrap'
-
-
 const PaymentHeaders = ({ headers }) => {
   
   return (

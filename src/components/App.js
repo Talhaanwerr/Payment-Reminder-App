@@ -7,8 +7,7 @@ import PaymentAdd from "./Payments/PaymentAdd";
 import Login from "./Login";
 import { getTokenn, onMessageListener } from "../firebase";
 import { useEffect, useState } from "react";
-import { messaging } from '../firebase'
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastSuccess } from "../helpers/ToastHelpers";
 
@@ -25,7 +24,6 @@ function App() {
   .then(payload => {
     setNotification({title: payload.notification.title, body: payload.notification.body})
     ToastSuccess(payload.notification.body)
-    console.log(payload);
   })
   .catch(err => console.log('failed: ', err));
 

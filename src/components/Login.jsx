@@ -7,7 +7,6 @@ import CustomButton from './Common/CustomButton';
 
 
 export default function Login() {
-  console.log("login")
   const navigate = useNavigate();
   const [ user, setUser ] = useState({
     email:"",
@@ -36,7 +35,7 @@ const handlePasswordChange = (e) => {
     try {
       setError("")
       setLoading(true)
-      const res = await login(email, password)
+      await login(email, password)
       navigate('/payments');
     } catch (error) {
       setError("Failed to sign in")

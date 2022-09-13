@@ -2,48 +2,42 @@ import React, { useEffect, useState } from "react"
 import { Button, Alert, Table } from "react-bootstrap"
 import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
-import { collection, doc, getDocs, deleteDoc } from "firebase/firestore"
-import { db } from '../../firebase'
 import DeleteIcon from "../Icons/DeleteIcon"
 import EditIcon from "../Icons/EditIcon"
 import { useContext } from "react"
 import { PaymentContext } from "../../contexts/PaymentContext"
 import PaymentHeaders from "./PaymentHeaders"
+import { ToastError, ToastSuccess } from "../../helpers/ToastHelpers"
 
 export default function PaymentsList() {
   const [ payments, setPayments ] = useState([])
   const [ paymentHeaders, setPaymentHeaders ] = useState(['id', 'title', 'description', "status"])  
   const [error, setError] = useState("")
-  const { deletePayment } = useContext(PaymentContext)
-  const { currentUser, logout } = useAuth()
+  const { deletePayment, getPayments } = useContext(PaymentContext)
+  const { logout } = useAuth()
   const navigate = useNavigate()
   
-  const paymentsCollectionRef = collection(db, "payments")
   useEffect(() => {
-    const getPayments = async () => {
-      const payments = []
-      const snapshot = await getDocs(paymentsCollectionRef)
-      snapshot.docs.forEach((doc) => {
-        payments.push({
-          id: doc.id,
-          status: (doc.data().paid == true ? "PAID" : "UNPAID"),
-          ...doc.data()
-        })
-      })
-      console.log("payments", payments)
-      setPayments(payments)   
-    }
-    getPayments()
+      const retrievePaments = async () => {
+        const payments = await getPayments()
+        setPayments(payments)   
+      }
+      retrievePaments()
   }, [])
 
-  // const handleDeletePayment = async (id) =>  {
-  //   const res = await deletePayment(id)
-  //   console.log("deleted:", res)
-  // }
 
   async function handleDeletePayment(id) {
-    const res = await deletePayment(id)
-    console.log("deleted:", res)
+    try {
+      await deletePayment(id)
+      setPayments(
+        payments.filter((payment) => {
+          return payment.id != id
+        })
+      )
+      ToastSuccess("Payment Deleted Successfully")
+    } catch (error) {
+      ToastError("Failed to delete a payment") 
+    }
   }
 
   async function handleAddPayment() {

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Form, Card, Alert } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from "../contexts/AuthContext"
+import { collection, addDoc } from "firebase/firestore"
+import { db } from '../firebase'
 import CustomButton from './Common/CustomButton';
 import CustomInput from './Common/CustomInput';
 
@@ -18,8 +20,6 @@ export default function SignUp() {
   const { signup } = useAuth()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-//   const history = useHistory()
-
 
   const handleEmailChange = (e) => {
     setUser({...user, email: e.target.value })
@@ -49,7 +49,8 @@ export default function SignUp() {
     try {
       setError("")
       setLoading(true)
-      const res = await signup(email, password)
+      await signup(email, password)
+      await addDoc(collection(db, "users"), user)
       navigate("/payments")
     } catch (error) {
       setError("Failed to create an account")

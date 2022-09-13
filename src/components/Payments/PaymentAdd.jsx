@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react' 
 import { Form, Card, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import { collection, addDoc } from "firebase/firestore"
-import { db } from '../../firebase'
 import CustomButton from '../Common/CustomButton'
 import CustomInput from '../Common/CustomInput'
 import { useAuth } from '../../contexts/AuthContext'
 import CustomCheckbox from '../Common/CustomCheckbox'
 import { PaymentContext } from '../../contexts/PaymentContext'
 import { useContext } from 'react'
-
+import { ToastSuccess } from '../../helpers/ToastHelpers'
 
 
 export default function PaymentAdd() {
@@ -20,7 +18,8 @@ export default function PaymentAdd() {
     description:"",
     dueDate: "",
     paid:false, 
-    userId:""
+    userId:"",
+    deleted: false
   })
 
   const [error, setError] = useState("")
@@ -38,16 +37,12 @@ export default function PaymentAdd() {
     try {
       setError("")
       setLoading(true)
-      const res = await createPayment(payment)
-      console.log("neww: ", res)
-      // const paymentsCollectionRef = collection(db, "payments")
-      // const res = await addDoc(paymentsCollectionRef, payment)
+      await createPayment(payment)
+      ToastSuccess("Payment Added Successfully")
       navigate("/payments")
     } catch (error) {
-      console.log("res: ", error)
-      setError("Failed to create an account")
+      setError("Failed to create a payment")
     }
-
     setLoading(false)
   }
 
