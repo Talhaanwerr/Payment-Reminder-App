@@ -42,17 +42,24 @@ function App() {
           <BrowserRouter>
           <Routes basename="/">
             <Route
-                path="/payments"
-                element={
-                    <Private>
-                        <PaymentsList />
-                    </Private>
-                }
+              path="/payments"
+              element={
+                <Private>
+                    <PaymentsList />
+                </Private>
+              }
+            />
+            <Route 
+              path="/payment" 
+              element={
+                <Private>
+                  <PaymentAdd />
+                </Private>
+              } 
             />
             <Route path="/signup" element={ <SignUp /> } />
             <Route path="/login" element={ <Login /> } />
             {/* <Route path="/payment/:id" element={<PaymentAdd />} /> */}
-            <Route path="/payment" element={<PaymentAdd />} />
             <Route path="*" element={ <Navigate to="/payments" /> }/>
           </Routes>
         </BrowserRouter>

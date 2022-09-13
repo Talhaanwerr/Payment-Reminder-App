@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react' 
 import { Form, Card, Alert } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import CustomButton from '../Common/CustomButton'
 import CustomInput from '../Common/CustomInput'
 import { useAuth } from '../../contexts/AuthContext'
@@ -8,6 +8,7 @@ import CustomCheckbox from '../Common/CustomCheckbox'
 import { PaymentContext } from '../../contexts/PaymentContext'
 import { useContext } from 'react'
 import { ToastSuccess } from '../../helpers/ToastHelpers'
+import { getFirestore, doc, getDoc } from "firebase/firestore"
 
 
 export default function PaymentAdd() {
@@ -25,6 +26,7 @@ export default function PaymentAdd() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const { createPayment } = useContext(PaymentContext)
+  const location = useLocation()
   const { title, description, dueDate } = payment
 
   useEffect(() => {
